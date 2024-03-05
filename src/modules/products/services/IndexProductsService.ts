@@ -67,7 +67,7 @@ class IndexProductsService {
         const start = dayjs(product.time_discount.startDate)
         const end = dayjs(product.time_discount.endDate)
 
-        this.timeDiscountExpired(start.isBefore(end), product)
+        await this.timeDiscountExpired(end.isBefore(start), product)
       }
     }
 
