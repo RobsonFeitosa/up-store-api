@@ -10,6 +10,10 @@ import {
   IFilterOrderProduct,
   IFilterProduct,
 } from '../infra/typeorm/repositories/ProductsRepository'
+import TimeDiscountRepository from '../infra/typeorm/repositories/TimeDiscountRepository'
+import TimeDiscount from '../infra/typeorm/entities/TimeDiscount'
+import dayjs from 'dayjs'
+import ITimeDiscountRepository from '../repositories/ITimeDiscountRepository'
 
 @injectable()
 class IndexProductsService {
@@ -19,6 +23,9 @@ class IndexProductsService {
 
     @inject('WishRepository')
     private readonly wishRepository: IWishRepository,
+
+    @inject('TimeDiscountRepository')
+    private readonly timeDiscountRepository: ITimeDiscountRepository,
 
     @inject('CategoriesRepository')
     private readonly categoriesRepository: ICategoriesRepository,
@@ -55,9 +62,37 @@ class IndexProductsService {
       }
 
       product.wish = wish ?? null
+
+      if (product.time_discount && product.time_discount_id) {
+        const start = dayjs(product.time_discount.startDate)
+        const end = dayjs(product.time_discount.endDate)
+
+        this.timeDiscountExpired(start.isBefore(end), product)
+      }
     }
 
     return products
+  }
+
+  async timeDiscountExpired(
+    isExpired: boolean,
+    product: Product,
+  ): Promise<void> {
+    if (isExpired) {
+      product.time_discount = null
+
+      if (product.time_discount_id) {
+        const timeDiscount = await this.timeDiscountRepository.findById(
+          product.time_discount_id,
+        )
+
+        if (timeDiscount) {
+          timeDiscount.status = 'expired'
+
+          await this.timeDiscountRepository.save(timeDiscount)
+        }
+      }
+    }
   }
 }
 
