@@ -2,8 +2,6 @@ import { Request, Response } from 'express'
 import { container } from 'tsyringe'
 
 import CreateCommentService from '@modules/users/services/CreateCommentService'
-import ShowAddressService from '@modules/users/services/ShowAddressService'
-import UpdateAddressService from '@modules/users/services/UpdateAddressService'
 import IndexCommentService from '@modules/users/services/IndexCommentService'
 import { classToClass } from 'class-transformer'
 import ShowCommentService from '@modules/users/services/ShowCommentService'

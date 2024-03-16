@@ -15,7 +15,6 @@ class AddressRepository implements IAddressRepository {
   }
 
   public async create(addressData: ICreateAddressDTO): Promise<Address> {
-    console.log('entrouuuu', addressData)
     const address = this.ormRepository.create(addressData)
 
     await this.ormRepository.save(address)
@@ -39,8 +38,8 @@ class AddressRepository implements IAddressRepository {
     return address
   }
 
-  public async findByIdUser(userId: string): Promise<Address | null> {
-    const address = await this.ormRepository.findOne({
+  public async findByIdUser(userId: string): Promise<Address[]> {
+    const address = await this.ormRepository.find({
       where: {
         user_id: userId,
       },
@@ -55,6 +54,11 @@ class AddressRepository implements IAddressRepository {
     const products = await this.ormRepository.findAndCount({
       take: options.limit,
       skip: (options.page - 1) * options.limit,
+      order: {
+        primary: 'DESC',
+        updated_at: 'DESC',
+        created_at: 'DESC',
+      },
     })
 
     return products
@@ -62,6 +66,18 @@ class AddressRepository implements IAddressRepository {
 
   public async save(address: Address): Promise<Address> {
     return this.ormRepository.save(address)
+  }
+
+  public async delete(id: string): Promise<void> {
+    const result = await this.ormRepository.findOne({
+      where: {
+        id,
+      },
+    })
+
+    if (result) {
+      this.ormRepository.remove(result)
+    }
   }
 }
 

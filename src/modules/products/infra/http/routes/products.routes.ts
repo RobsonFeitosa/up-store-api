@@ -15,13 +15,11 @@ const upload = multer(uploadConfig.multer)
 productsRouter.get('/', productsController.index)
 
 productsRouter.get('/:slug/code/:product_id', productsController.show)
+productsRouter.get('/variation-colors', productsController.indexVariationColors)
+productsRouter.get('/variation-sizes', productsController.indexVariationSizes)
 
 productsRouter.delete('/:productId', productsController.delete)
 productsRouter.get('/emphasis', productsController.showEmphasis)
-// productsRouter.get(
-//   '/time-discounts/options-products',
-//   productsController.indexTimeDiscountsOptions,
-// )
 
 productsRouter.post(
   '/shipping-deadline',

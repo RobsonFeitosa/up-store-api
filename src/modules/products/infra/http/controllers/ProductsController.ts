@@ -15,6 +15,8 @@ import ShowEmphasisProductService from '@modules/products/services/ShowEmphasisP
 import IndexTimeDiscountAvailableProduct from '@modules/products/services/IndexTimeDiscountAvailableProduct'
 import CreateShippingDeadlineCorreiosService from '@modules/products/services/CreateShippingDeadlineCorreiosService'
 import { TypeProduct } from '../../typeorm/repositories/ProductsRepository'
+import IndexVariationProductsService from '@modules/products/services/IndexVariationProductsService'
+import IndexSizesVariationProductsService from '@modules/products/services/IndexSizesVariationProductsService'
 
 export default class ProductsController {
   public async create(request: Request, response: Response): Promise<Response> {
@@ -84,6 +86,8 @@ export default class ProductsController {
       priceMin,
       priceMax,
       lowPrice,
+      color,
+      size,
       highPrice,
       old,
       alphabeticalASC,
@@ -109,6 +113,8 @@ export default class ProductsController {
         ...(priceMin && { priceMin: Number(priceMin) }),
         ...(priceMax && { priceMax: Number(priceMax) }),
         ...(productIds && { productIds: String(productIds) }),
+        ...(size && { size: String(size) }),
+        ...(color && { color: String(color) }),
         ...(categoryId && {
           categoryId: String(categoryId),
         }),
@@ -144,6 +150,32 @@ export default class ProductsController {
     const showProduct = container.resolve(ShowProductService)
 
     const products = await showProduct.execute(slug, product_id)
+
+    return response.json(classToClass(products))
+  }
+
+  public async indexVariationColors(
+    request: Request,
+    response: Response,
+  ): Promise<Response> {
+    const showProductVariations = container.resolve(
+      IndexVariationProductsService,
+    )
+
+    const products = await showProductVariations.execute()
+
+    return response.json(classToClass(products))
+  }
+
+  public async indexVariationSizes(
+    request: Request,
+    response: Response,
+  ): Promise<Response> {
+    const showProductVariations = container.resolve(
+      IndexSizesVariationProductsService,
+    )
+
+    const products = await showProductVariations.execute()
 
     return response.json(classToClass(products))
   }

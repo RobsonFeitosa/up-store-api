@@ -10,8 +10,6 @@ import {
   IFilterOrderProduct,
   IFilterProduct,
 } from '../infra/typeorm/repositories/ProductsRepository'
-import TimeDiscountRepository from '../infra/typeorm/repositories/TimeDiscountRepository'
-import TimeDiscount from '../infra/typeorm/entities/TimeDiscount'
 import dayjs from 'dayjs'
 import ITimeDiscountRepository from '../repositories/ITimeDiscountRepository'
 
@@ -36,6 +34,7 @@ class IndexProductsService {
     filter: IFilterProduct,
     order: IFilterOrderProduct,
   ): Promise<[Product[], number]> {
+    console.log({ filter })
     const products = await this.productsRepository.findAndCount(
       options,
       filter,

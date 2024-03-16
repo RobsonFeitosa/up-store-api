@@ -6,6 +6,8 @@ import ShowAddressService from '@modules/users/services/ShowAddressService'
 import UpdateAddressService from '@modules/users/services/UpdateAddressService'
 import IndexAddressService from '@modules/users/services/IndexAddressService'
 import UpdatePrimaryAddressService from '@modules/users/services/UpdatePrimaryAddressService'
+import DeleteAddressService from '@modules/users/services/DeleteAddressService'
+import ShowIsPrimaryAddressService from '@modules/users/services/ShowIsPrimaryAddressService'
 
 export default class AddressController {
   public async create(req: Request, res: Response): Promise<Response> {
@@ -31,6 +33,26 @@ export default class AddressController {
     return res.json(address)
   }
 
+  public async showIsPrimary(req: Request, res: Response): Promise<Response> {
+    const userId = req.user.id
+
+    const showAddress = container.resolve(ShowIsPrimaryAddressService)
+
+    const address = await showAddress.execute(userId)
+
+    return res.json(address)
+  }
+
+  public async delete(req: Request, res: Response): Promise<Response> {
+    const { addressId } = req.params
+
+    const deleted = container.resolve(DeleteAddressService)
+
+    await deleted.execute(addressId)
+
+    return res.status(204).send()
+  }
+
   public async updatePrimary(req: Request, res: Response): Promise<Response> {
     const { addressId } = req.params
 
@@ -43,12 +65,16 @@ export default class AddressController {
 
   public async update(req: Request, res: Response): Promise<Response> {
     const { addressId } = req.params
+    const userId = req.user.id
+
     const {
       zipcode,
       city,
       state,
       country,
       neighborhood,
+      title,
+      primary,
       street,
       street_number,
     } = req.body
@@ -60,10 +86,13 @@ export default class AddressController {
       zipcode,
       city,
       state,
+      title,
+      primary,
       country,
       neighborhood,
       street,
       streetNumber: street_number,
+      userId,
     })
 
     return res.json(address)

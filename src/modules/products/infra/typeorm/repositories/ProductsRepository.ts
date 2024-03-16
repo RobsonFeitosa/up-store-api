@@ -35,6 +35,8 @@ export interface IFilterProduct {
   priceMax?: number
   categoryId?: string
   productIds?: string
+  color?: string
+  size?: string
 }
 
 export interface IFilterOrderProduct {
@@ -159,6 +161,22 @@ class ProductsRepository implements IProductsRepository {
       }
     }
 
+    if (filter.color) {
+      where[0].attributes = {
+        variations: {
+          name: filter.color,
+        },
+      }
+    }
+
+    if (filter.size) {
+      where[0].attributes = {
+        variations: {
+          name: filter.size,
+        },
+      }
+    }
+
     if (filter.userId) {
       where[0].wish = {
         user_id: filter.userId,
@@ -217,6 +235,8 @@ class ProductsRepository implements IProductsRepository {
       }
     }
 
+    console.log({ where })
+
     const products = await this.ormRepository.findAndCount({
       take: options.limit,
       skip: (options.page - 1) * options.limit,
@@ -229,6 +249,15 @@ class ProductsRepository implements IProductsRepository {
 
     return products
   }
+
+  // const relations = [
+  //   'images',
+  //   'wish',
+  //   'product_data',
+  //   'attributes',
+  //   'time_discount',
+  //   'team',
+  // ]
 
   public async findById(id: string): Promise<Product | null> {
     const product = await this.ormRepository.findOne({

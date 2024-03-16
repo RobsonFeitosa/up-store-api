@@ -13,6 +13,18 @@ class CreateAddressService {
   ) {}
 
   public async execute(data: ICreateAddressDTO): Promise<Address> {
+    if (data.user_id && data.primary) {
+      const addressByUser = await this.addressRepository.findByIdUser(
+        data.user_id,
+      )
+
+      for (const address of addressByUser) {
+        address.primary = false
+
+        await this.addressRepository.save(address)
+      }
+    }
+
     const address = await this.addressRepository.create(data)
 
     return address

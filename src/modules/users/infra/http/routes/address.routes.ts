@@ -11,7 +11,9 @@ addressRouter.use(ensureAuthenticated)
 addressRouter.post('/', addressController.create)
 addressRouter.get('/profile', addressController.show)
 addressRouter.get('/', addressController.index)
+addressRouter.get('/is-primary', addressController.showIsPrimary)
 addressRouter.put('/:addressId', addressController.update)
+addressRouter.delete('/:addressId', addressController.delete)
 addressRouter.patch('/primary/:addressId', addressController.updatePrimary)
 
 export default addressRouter

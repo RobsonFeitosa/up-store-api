@@ -2,7 +2,7 @@ import ICreateAddressDTO from '@modules/users/dtos/ICreateAddressDTO'
 
 export const addressData: ICreateAddressDTO[] = [
   {
-    title: 'casa da veia',
+    title: 'Trabalho',
     primary: false,
     zipcode: '7700000',
     city: 'Palmas',

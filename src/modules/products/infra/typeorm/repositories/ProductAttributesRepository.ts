@@ -1,4 +1,4 @@
-import { Repository } from 'typeorm'
+import { In, Repository } from 'typeorm'
 import ProductAttributes from '../entities/ProductAttributes'
 import dataSource from '@shared/infra/typeorm'
 import IPaginationOptionsDTO from '@modules/dtos/IPaginationOptionsDTO'
@@ -38,6 +38,34 @@ class ProductAttributesRepository implements IProductAttributesRepository {
       order: {
         created_at: 'DESC',
       },
+    })
+
+    return productAttr
+  }
+
+  public async findAllAttributesColors(): Promise<ProductAttributes[]> {
+    const productAttr = await this.ormRepository.find({
+      where: {
+        name: In(['Cores', 'Cor', 'cor', 'cores']),
+      },
+      order: {
+        created_at: 'DESC',
+      },
+      relations: ['variations'],
+    })
+
+    return productAttr
+  }
+
+  public async findAllAttributesSizes(): Promise<ProductAttributes[]> {
+    const productAttr = await this.ormRepository.find({
+      where: {
+        name: In(['Tamanhos', 'tamanho', 'Tamanho', 'tamanhos']),
+      },
+      order: {
+        created_at: 'DESC',
+      },
+      relations: ['variations'],
     })
 
     return productAttr
