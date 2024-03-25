@@ -8,6 +8,7 @@ import { classToClass } from 'class-transformer'
 import IndexOrderByUserService from '@modules/orders/services/IndexOrderByUserService'
 import IndexOrderService from '@modules/orders/services/IndexOrderService'
 import UpdateTrakingCodeService from '@modules/orders/services/UpdateTrakingCodeService'
+import ShowLastOrderService from '@modules/orders/services/ShowLastOrderService'
 
 export default class OrdersController {
   public async create(request: Request, response: Response): Promise<Response> {
@@ -29,6 +30,21 @@ export default class OrdersController {
     const { id } = request.params
 
     const findOrder = container.resolve(FindOrderService)
+
+    const order = await findOrder.execute({
+      id,
+    })
+
+    return response.json(classToClass(order))
+  }
+
+  public async showLast(
+    request: Request,
+    response: Response,
+  ): Promise<Response> {
+    const id = request.user.id
+
+    const findOrder = container.resolve(ShowLastOrderService)
 
     const order = await findOrder.execute({
       id,

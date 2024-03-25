@@ -8,6 +8,7 @@ const ordersController = new OrdersController()
 
 ordersRouter.use(ensureAuthenticated)
 
+ordersRouter.get('/last', ordersController.showLast)
 ordersRouter.post('/', ordersController.create)
 ordersRouter.patch('/code/:orderId', ordersController.updateTrackingCode)
 ordersRouter.get('/', ordersController.index)
