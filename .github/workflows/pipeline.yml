@@ -1,0 +1,32 @@
+name: Node CI
+
+on: [push]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+    - name: Install Node.js and Yarn
+      uses: actions/setup-node@v3
+      with:
+        node-version: '16.x'
+        registry-url: 'https://registry.npmjs.org'
+    - name: Install yarn dependencies
+      run: yarn install
+    - name: Run build task
+      run: yarn build
+    - name: Deploy to Server
+      uses: easingthemes/ssh-deploy@main
+      with:
+          SSH_PRIVATE_KEY: ${{ secrets.EC2_SSH_KEY }}
+          ARGS: "-rlgoDzvc -i --delete"
+          SOURCE: "./dist"
+          REMOTE_HOST: "ec2-52-200-52-199.compute-1.amazonaws.com"
+          REMOTE_USER: "ubuntu"
+          TARGET: "/home/ubuntu/up-store-api"
+          EXCLUDE: "/up-store-api/node_modules/"
+          SCRIPT_AFTER: | 
+            /home/ubuntu/.nvm/versions/node/v18.16.0/bin/pm2 restart all

@@ -1,0 +1,20 @@
+{
+  "type": "postgres",  
+  "host": "localhost",
+  "port": 35432,
+  "username": "docker",
+  "password": "0e148efe486c6da1e29048b892c8b4c3",
+  "database": "nexus",
+  "logging": false,
+  "entities": [
+    "./src/modules/**/infra/typeorm/entities/*.ts"
+  ],
+  "migrations": [
+    "./src/shared/infra/typeorm/migrations/*.ts"
+  ],  
+  "seeds": ["./src/shared/**/infra/typeorm/seeds/*.seed.ts"],
+  "factories": ["./src/modules/**/infra/typeorm/factories/*.factory.ts"], 
+  "cli": {
+    "migrationsDir": "./src/shared/infra/typeorm/migrations"
+  }
+} 
