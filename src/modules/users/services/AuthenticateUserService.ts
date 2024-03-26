@@ -59,7 +59,6 @@ class AuthenticateUserService {
       user.password,
     )
 
-    console.log('alo mane')
     if (!userSettings.actived) {
       this.sendActivedUserEmail(user)
       return { user: {} as User, token: 'inactive-user--resend-mail' }
