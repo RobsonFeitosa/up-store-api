@@ -43,7 +43,7 @@ export default {
   config: {
     disk: {},
     aws: {
-      bucket: 'store-sample-storage-archive',
+      bucket: 'store-products-example',
     },
   },
 } as IUploadConfig
